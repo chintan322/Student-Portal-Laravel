@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesResources;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\Request;
+use DB;
+use Illuminate\Http\RedirectResponse;
+
+class RegisterController extends BaseController
+{
+    public function create()
+    {
+        return view('create');
+    }
+
+    public function store()
+    {
+        $this->validate(request(), [
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+        
+        $user = User::create(request(['name', 'email', 'password']));
+        
+        auth()->login($user);
+        
+        return redirect()->to('/games');
+    }
+}
